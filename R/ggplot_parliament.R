@@ -129,7 +129,7 @@ ggplot_parliament <- function(
       ) +
     geom_text(
       aes(x = 0, 
-          y = 0, 
+          y = 0.1, 
           label = switch(text_total + 1, "", sum(members))
           ), 
       fontface = "bold", 

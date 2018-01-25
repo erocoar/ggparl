@@ -112,7 +112,7 @@ ggplot_parliament2 <- function(
       ) +
     geom_text(
       aes(x = 0, 
-          y = 0.05, 
+          y = 0.1, 
           label = switch(text_total + 1, "", sum(shares))
       ), 
       fontface = "bold", 
