@@ -9,7 +9,7 @@
 if (!require(devtools)) {
     install.packages('devtools')
 }
-devtools::install_github('eropcoar/ggparl')
+devtools::install_github('erocoar/ggparl')
 ```
 ### Features
 `ggplot_parliament` draws a parliament diagram, clustering points along an arc by parties with each point representing a single member of parliament. 
