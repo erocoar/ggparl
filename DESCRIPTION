@@ -2,7 +2,7 @@ Package: ggparl
 Title: Parliament Diagrams with 'ggplot2'
 Version: 0.0.1
 Authors@R: person("Frederik", "Tiedemann", email = "fj.tiedemann@googlemail.com", role = c("aut", "cre"))
-Description: ggparl implements traditional parliament diagrams and arc bar charts.
+Description: This package implements traditional parliament diagrams and arc bar charts.
 URL: https://github.com/erocoar/ggparl
 License: MIT + file LICENSE
 Encoding: UTF-8
