@@ -21,7 +21,7 @@ bt <- data.frame(
 ggplot_parliament(bt$parties, bt$seats, bt$colors)
 ```
 
-![parliament1](https://www.dropbox.com/s/mfwq0t6yeg6ba4g/parl1.png)
+![parliament1](https://www.dropbox.com/s/mfwq0t6yeg6ba4g/parl1.png?dl=0)
 
 `ggplot_parliament2` draws an arc bar diagram with optional spacing representing the proportional parliamentary representation of parties. 
 
