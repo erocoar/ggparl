@@ -1,6 +1,6 @@
 
 ### About
-`ggparl` adds functions for drawing parliaments to `ggplot2`.
+`ggparl` adds functions for drawing parliament diagrams to `ggplot2`.
 
 ### Installation
 `ggparl` can be installed via GitHub:
