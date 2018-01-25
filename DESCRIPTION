@@ -1,0 +1,19 @@
+Package: ggparl
+Title: Parliament Diagrams with 'ggplot2'
+Version: 0.0.1
+Authors@R: person("Frederik", "Tiedemann", email = "fj.tiedemann@googlemail.com", role = c("aut", "cre"))
+Description: ggparl implements traditional parliament diagrams and arc bar charts.
+URL: https://github.com/erocoar/ggparl
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+	R (>= 3.4.0),
+	ggplot2 (>= 2.2.0)
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Collate: 
+    'ggplot_parliament.R'
+    'ggplot_parliament2.R'
