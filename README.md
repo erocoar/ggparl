@@ -1,4 +1,6 @@
 
+[![Build Status](https://travis-ci.org/erocoar/ggparl.svg?branch=master)](https://travis-ci.org/erocoar/ggparl)
+
 ### About
 `ggparl` adds functions for drawing parliament diagrams to `ggplot2`.
 
