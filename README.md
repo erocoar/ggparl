@@ -27,10 +27,14 @@ ggplot_parliament(bt$parties, bt$seats, bt$colors)
 
 ![parliament1](https://i.imgur.com/aNCpUDb.png)
 
-`ggplot_parliament2` draws an arc bar chart with optional spacing representing the parties' proportional parliamentary representation. 
+`ggplot_parliament2` draws an arc bar chart with optional spacing showing the parties' proportional representation in parliament. 
 
 ```r
 ggplot_parliament2(bt$parties, bt$seats, bt$colors, sep = 0.05)
 ```
 
 ![parliament2](https://i.imgur.com/q8k2eOw.png)
+
+### Roadmap
+
+While the current features are limited to parliaments (and all other uses arc bar charts may have), ggparl aims to in the future include more functions for convenient visualization of data frequently encountered in politics.
