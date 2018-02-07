@@ -30,39 +30,88 @@ facet_share <- function(facets, scales = "fixed",
   )
 }
 
-FacetShare <- ggproto("FacetShare", FacetWrap,
+FacetShare <- ggproto("FacetShare", Facet,
   shrink = TRUE,
   
-  map_data = function(data, layout, params) {
-    if (plyr::empty(data)) {
-      return(cbind(data, PANEL = integer(0)))
+  compute_layout = function(data, params) FacetWrap$compute_layout(data, params),
+  map_data = function(data, layout, params) FacetWrap$map_data(data, layout, params),
+  
+  init_scales = function(layout, x_scale = NULL, y_scale = NULL, params) {
+    lala <<- list(x_scale, y_scale, layout)
+    scales <- list()
+    if (!is.null(x_scale)) {
+      scales$x <- plyr::rlply(max(layout$SCALE_X), x_scale$clone())
+      if (params$dir == "h") {
+        scales$x[[2]]$dir <- "h"
+        scales$x[[2]]$oob <- function(x, ...) x
+      }
     }
-    vars <- plyr::as.quoted(params$facets)
-    
-    facet_vals <- eval_facet_vars(vars, data, params$plot_env)
-    facet_vals[] <- lapply(facet_vals[], as.factor)
-    
-    missing_facets <- setdiff(names(vars), names(facet_vals))
-    if (length(missing_facets) > 0) {
-      
-      to_add <- unique(layout[missing_facets])
-      
-      data_rep <- rep.int(1:nrow(data), nrow(to_add))
-      facet_rep <- rep(1:nrow(to_add), each = nrow(data))
-      
-      data <- plyr::unrowname(data[data_rep, , drop = FALSE])
-      facet_vals <- plyr::unrowname(cbind(
-        facet_vals[data_rep, ,  drop = FALSE],
-        to_add[facet_rep, , drop = FALSE]))
+    if (!is.null(y_scale)) {
+      scales$y <- plyr::rlply(max(layout$SCALE_Y), y_scale$clone())
+      if (params$dir == "v") {
+        scales$y[[2]]$dir = "v"
+        scales$y[[2]]$oob <- function(x, ...) x
+      }
     }
+    slala <<- scales
+    scales
+  },
+
+
+  train_scales = function(x_scales, y_scales, layout, data, params) {
+    lala2 <<- list(x_scales, y_scales, params)
+    ppa <<- list(x_scales, y_scales, layout, data, params)
+    dir <- if (length(x_scales) == 2) x_scales[[2]]$dir else y_scales[[2]]$dir
+    data <- lapply(data, function(layer_data) {
+      match_id <- match(layer_data$PANEL, layout$PANEL)
+      vars <- intersect(
+        if (dir == "h") x_scales[[1]]$aesthetics else y_scales[[1]]$aesthetics, names(layer_data))
+      trans <- layer_data$PANEL == 2L
+      ldld <<- layer_data
+      # if (is.numeric(layer_data[trans, vars])) {
+      for (i in vars) {
+        layer_data[trans, i] <- layer_data[trans, i] * -1
+      }
+        # layer_data[trans, vars] <- layer_data[trans, vars] * -1
+      # }
+      layer_data
+    })
+
+    # Facet$train_scales(x_scales, y_scales, layout, data, params)
+    for (layer_data in data) {
+      match_id <- match(layer_data$PANEL, layout$PANEL)
+      
+      if (!is.null(x_scales)) {
+        x_vars <- intersect(x_scales[[1]]$aesthetics, names(layer_data))
+        SCALE_X <- layout$SCALE_X[match_id]
+        
+        scale_apply(layer_data, x_vars, "train", SCALE_X, x_scales)
+      }
+      
+      if (!is.null(y_scales)) {
+        y_vars <- intersect(y_scales[[1]]$aesthetics, names(layer_data))
+        SCALE_Y <- layout$SCALE_Y[match_id]
+        
+        scale_apply(layer_data, y_vars, "train", SCALE_Y, y_scales)
+      }
+    }
+  },
+
+  finish_data = function(data, layout, x_scales, y_scales, params) {
+
+    dir <- if (length(x_scales) == 2) x_scales[[2]]$dir else y_scales[[2]]$dir
+    to_intersect <- if (dir == "h") x_scales[[1]]$aesthetics else y_scales[[1]]$aesthetics
+    vars <- intersect(to_intersect, names(data))
+    trans <- data$PANEL == 2L
+    ppa3 <<- list(data, layout, x_scales, y_scales, params, vars)
     
-    keys <- plyr::join.keys(facet_vals, layout, by = names(vars))
     
-    data$PANEL <- layout$PANEL[match(keys$x, keys$y)]
-    data <- data[order(data$PANEL), ]
-    dir_idx <- switch(params$dir, "h" = 1, "v" = 2)
-    
-    data[data$PANEL == 2, dir_idx] <- data[data$PANEL == 2, dir_idx] * -1
+    for (i in vars) {
+      layer_data[trans, i] <- layer_data[trans, i] * -1
+    }
+    # if (is.numeric(layer_data[trans, vars])) {
+    #   data[trans, vars] <- data[trans, vars] * -1
+    # }
     data
   },
   
@@ -140,7 +189,7 @@ FacetShare <- ggproto("FacetShare", FacetWrap,
       shared_axis <- gtable::gtable_add_row_space(shared_axis, panel_spacing)
     }
 
-    # add y.axis
+    # add shared axis
     if (params$dir == "h") {
       panel_table <- gtable::gtable_add_cols(panel_table, 
         convertWidth(grobWidth(shared_axis), "cm") + panel_spacing, 1)
@@ -151,9 +200,7 @@ FacetShare <- ggproto("FacetShare", FacetWrap,
       panel_table <- gtable::gtable_add_grob(panel_table, shared_axis, l = 1, t = 2, clip = "off")
     }
     panel_table
-  }
-                
-  )
+  })
   
 eval_facet_vars <- function(vars, data, env = emptyenv()) {
   nms <- names(vars)
@@ -162,6 +209,7 @@ eval_facet_vars <- function(vars, data, env = emptyenv()) {
   for (i in seq_along(vars)) {
     out[[ nms[[i]] ]] <- eval_facet_var(vars[[i]], data, env = env)
   }
+  oaut <<- out
   tibble::as_tibble(out)
 }
 
@@ -186,8 +234,59 @@ test <- data.frame(x = rep(seq_len(15), 2), y = rep(rnorm(15), 2),
                    fac = factor(rep(1:2, each = 15)))
 
 
-ggplot(test, aes(x = x, y = y)) + 
+P <- ggplot(test, aes(x = x, y = y)) + 
   geom_line(aes(color = fac), lwd = 1) + 
   facet_share(~fac, dir = "h", scales = "free") +
   theme(legend.position = "none")
+
+P
+
+
+mpg <- mpg
+mpg <- mpg[, c("class", "year")]
+mpg <- data.frame(rbind(mpg[mpg$year == 1999, ], mpg[mpg$year == 1999, ]))
+mpg$year <- factor(rep(1:2, each = nrow(mpg)/2))
+
+
+ggplot(mpg, aes(class)) + geom_bar(aes(y = ..count..)) + facet_share(~year, scales = "free")
+
+ggplot(mpg, aes(class)) + geom_bar()
+
+
+SUPERLIST <<- list(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
+
+SUPERLIST[[1]][[2]]$children$
+
+
+
+
+
+
+
+
+
+
+
+#https://github.com/thomasp85/ggforce/blob/master/R/facet_zoom.R
+scale_apply <- function(data, vars, method, scale_id, scales) {
+  if (length(vars) == 0) return()
+  if (nrow(data) == 0) return()
+  
+  n <- length(scales)
+  if (any(is.na(scale_id))) stop()
+  
+  scale_index <- split_indices(scale_id, n)
+  
+  a <- lapply(vars, function(var) {
+    pieces <- lapply(seq_along(scales), function(i) {
+      scales[[i]][[method]](data[[var]][scale_index[[i]]])
+    })
+    # Join pieces back together, if necessary
+    if (!is.null(pieces)) {
+      unlist(pieces)[order(unlist(scale_index))]
+    }
+  })
+  aaa <<- a
+  a
+}
 
