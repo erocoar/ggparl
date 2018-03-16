@@ -37,7 +37,7 @@ FacetShare <- ggproto("FacetShare", Facet,
   map_data = function(data, layout, params) FacetWrap$map_data(data, layout, params),
   
   init_scales = function(layout, x_scale = NULL, y_scale = NULL, params) {
-    lala <<- list(x_scale, y_scale, layout)
+    lala <<- list(x_scale, y_scale, params, layout)
     scales <- list()
     if (!is.null(x_scale)) {
       scales$x <- plyr::rlply(max(layout$SCALE_X), x_scale$clone())
@@ -53,72 +53,86 @@ FacetShare <- ggproto("FacetShare", Facet,
         scales$y[[2]]$oob <- function(x, ...) x
       }
     }
-    slala <<- scales
+    sss <<- scales
     scales
   },
 
-
   train_scales = function(x_scales, y_scales, layout, data, params) {
+    y_scales[[2]]$range$range <- rev(y_scales[[2]]$range$range) * -1
     lala2 <<- list(x_scales, y_scales, params)
     ppa <<- list(x_scales, y_scales, layout, data, params)
-    dir <- if (length(x_scales) == 2) x_scales[[2]]$dir else y_scales[[2]]$dir
-    data <- lapply(data, function(layer_data) {
-      match_id <- match(layer_data$PANEL, layout$PANEL)
+    dir <- if (length(x_scales) == 2) x_scales[[2]]$dir else "v"#y_scales[[2]]$dir
+    data <- lapply(data, function(layer_dat) {
+      match_id <- match(layer_dat$PANEL, layout$PANEL)
       vars <- intersect(
-        if (dir == "h") x_scales[[1]]$aesthetics else y_scales[[1]]$aesthetics, names(layer_data))
-      trans <- layer_data$PANEL == 2L
-      ldld <<- layer_data
-      # if (is.numeric(layer_data[trans, vars])) {
-      for (i in vars) {
-        layer_data[trans, i] <- layer_data[trans, i] * -1
+        if (dir == "h") x_scales[[1]]$aesthetics else y_scales[[1]]$aesthetics, names(layer_dat))
+      trans <- layer_dat$PANEL == 2L
+      ldld <<- layer_dat
+      
+      if (any(do.call(grepl, list("Discrete", list(class(x_scales[[1]]), class(y_scales[[1]])))))){
+        for (i in vars) {
+          layer_dat[trans, i] <- rev(layer_dat[trans, i])
+        }
+      } else {
+          for (i in vars) {
+            layer_dat[trans, i] <- layer_dat[trans, i] * -1 #layer_dat[trans, i] * -1
+          }
       }
-        # layer_data[trans, vars] <- layer_data[trans, vars] * -1
-      # }
-      layer_data
+
+      layer_dat
     })
 
     # Facet$train_scales(x_scales, y_scales, layout, data, params)
-    for (layer_data in data) {
-      match_id <- match(layer_data$PANEL, layout$PANEL)
+    for (layer_dat in data) {
+      match_id <- match(layer_dat$PANEL, layout$PANEL)
       
       if (!is.null(x_scales)) {
-        x_vars <- intersect(x_scales[[1]]$aesthetics, names(layer_data))
+        x_vars <- intersect(x_scales[[1]]$aesthetics, names(layer_dat))
         SCALE_X <- layout$SCALE_X[match_id]
         
-        scale_apply(layer_data, x_vars, "train", SCALE_X, x_scales)
+        scale_apply(layer_dat, x_vars, "train", SCALE_X, x_scales)
       }
       
       if (!is.null(y_scales)) {
-        y_vars <- intersect(y_scales[[1]]$aesthetics, names(layer_data))
+        y_vars <- intersect(y_scales[[1]]$aesthetics, names(layer_dat))
         SCALE_Y <- layout$SCALE_Y[match_id]
         
-        scale_apply(layer_data, y_vars, "train", SCALE_Y, y_scales)
+        scale_apply(layer_dat, y_vars, "train", SCALE_Y, y_scales)
       }
     }
+    
+    lala3 <<- list(x_scales, y_scales)
   },
 
   finish_data = function(data, layout, x_scales, y_scales, params) {
-
+    asdtest <<- list(data, layout, x_scales, y_scales, params)
     dir <- if (length(x_scales) == 2) x_scales[[2]]$dir else y_scales[[2]]$dir
     to_intersect <- if (dir == "h") x_scales[[1]]$aesthetics else y_scales[[1]]$aesthetics
     vars <- intersect(to_intersect, names(data))
+    ttss <<- list(to_intersect, vars)
     trans <- data$PANEL == 2L
     ppa3 <<- list(data, layout, x_scales, y_scales, params, vars)
     
-    
-    for (i in vars) {
-      layer_data[trans, i] <- layer_data[trans, i] * -1
+    if (any(do.call(grepl, list("Discrete", list(class(x_scales[[1]]), class(y_scales[[1]])))))){
+      
+      for (i in vars) {
+        data[trans, i] <- data[trans, i] * -1 #rev(data[trans, i])
+      }
+    } else {
+      for (i in vars) {
+        data[trans, i] <- data[trans, i] * -1
+      }
     }
-    # if (is.numeric(layer_data[trans, vars])) {
-    #   data[trans, vars] <- data[trans, vars] * -1
-    # }
+
     data
   },
   
   draw_panels = function(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
     ncol <- max(layout$COL)
     nrow <- max(layout$ROW)
-
+  
+    asd <<- list(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
+    
     panels <- matrix(panels, nrow = nrow, ncol = ncol)
 
     panel_table <- gtable::gtable_matrix("layout", panels,
@@ -233,33 +247,39 @@ eval_facet_var <- function(var, data, env = emptyenv()) {
 test <- data.frame(x = rep(seq_len(15), 2), y = rep(rnorm(15), 2),
                    fac = factor(rep(1:2, each = 15)))
 
-
 P <- ggplot(test, aes(x = x, y = y)) + 
   geom_line(aes(color = fac), lwd = 1) + 
-  facet_share(~fac, dir = "h", scales = "free") +
-  theme(legend.position = "none")
+  facet_share(~fac, dir = "v", scales = "free")
 
 P
+
+P + coord_flip()
+
+
+
+
+E <- ggplot(test, aes(x = x, y = y)) + 
+  geom_line(aes(color = fac), lwd = 1) + 
+  facet_wrap(~fac, dir = "h", scales = "free")
+
+E
+E + coord_flip()
+
+
+
+
+
+
+
 
 
 mpg <- mpg
 mpg <- mpg[, c("class", "year")]
-mpg <- data.frame(rbind(mpg[mpg$year == 1999, ], mpg[mpg$year == 1999, ]))
-mpg$year <- factor(rep(1:2, each = nrow(mpg)/2))
+mpg2 <- data.frame(rbind(mpg[mpg$year == 1999, ], mpg[mpg$year == 1999, ]))
+mpg2$year <- factor(rep(1:2, each = nrow(mpg2)/2))
 
 
-ggplot(mpg, aes(class)) + geom_bar(aes(y = ..count..)) + facet_share(~year, scales = "free")
-
-ggplot(mpg, aes(class)) + geom_bar()
-
-
-SUPERLIST <<- list(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
-
-SUPERLIST[[1]][[2]]$children$
-
-
-
-
+ggplot(mpg2, aes(class)) + geom_bar(aes(y = ..count..)) + facet_share(~ year, dir = "v", scales = "free")
 
 
 
