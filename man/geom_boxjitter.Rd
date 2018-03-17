@@ -93,7 +93,7 @@ US spelling will take precedence.}
 
 \item{jitter.width}{Width passed to position_jitter. Defaults to half the width of the boxplot.}
 
-\item{jitter.height}{Height passed to position_jitter. Defaults to 40% of the resolution.}
+\item{jitter.height}{Height passed to position_jitter. Defaults to 40 percent of the resolution.}
 
 \item{jitter.seed}{Seed passed to position_jitter for reproducible jittering.}
 
