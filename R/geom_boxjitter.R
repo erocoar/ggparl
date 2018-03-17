@@ -1,7 +1,7 @@
 #' @rdname ggparl-extensions
 #' @format NULL
 #' @usage NULL
-#' @importFrom ggplot2 ggproto GeomBoxplot
+#' @importFrom ggplot2 ggproto GeomBoxplot aes
 #' @export
 GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
   default_aes = aes(weight = 1, colour = "grey20", fill = "white", size = 0.5,
