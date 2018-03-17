@@ -141,11 +141,12 @@ GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
 #' @inheritParams ggplot2::geom_boxplot
 #' @param jitter.colour,jitter.color,jitter.fill,jitter.shape,jitter.size,jitter.stroke,jitter.alpha
 #'   Default aesthetics for jitter, set to `NULL` to inherit from the aesthetics used for the box.
-#' @param jitter.width Width passed to `position_jitter`. Defaults to half the width of the boxplot.
-#' @param jitter.height Height passed to `position_jitter`. Defaults to 40% of the resolution.
-#' @param jitter.seed Seed passed to `position_jitter` for reproducible jittering.
+#' @param jitter.width Width passed to position_jitter. Defaults to half the width of the boxplot.
+#' @param jitter.height Height passed to position_jitter. Defaults to 40% of the resolution.
+#' @param jitter.seed Seed passed to position_jitter for reproducible jittering.
 #' @param errorbar.draw Draw horizontal whiskers at the top and bottom (the IQR). Defaults to `FALSE`.
 #' @param errorbar.length Length of the horizontal whiskers (errorbar). Defaults to half the width of the half-boxplot.
+#' 
 #' @export
 geom_boxjitter <- function(mapping = NULL, data = NULL,
                            stat = "BoxJitter", position = "dodge2",
