@@ -1,3 +1,21 @@
+#' A hybrid boxplot. H
+
+#' Half boxplot, half scatterplot with jitter.
+
+#' @inheritParams ggplot::geom_boxplot
+#' @param jitter.colour Default aesthetics for jitter, set to `NULL` to inherit from the aesthetics used for the box.
+#' @param jitter.color
+#' @param jitter.fill
+#' @param jitter.size
+#' @param jitter.stroke
+#' @param jitter.alpha
+#' @param jitter.width Width passed to `position_jitter`. Defaults to half the width of the boxplot.
+#' @param jitter.height Height passed to `position_jitter`. Defaults to 40% of the resolution.
+#' @param jitter.seed Seed passed to `position_jitter` for reproducible jittering.
+#' @param errorbar.draw Draw horizontal whiskers at the top and bottom (the IQR). Defaults to `FALSE`.
+#' @param errorbar.length Length of the horizontal whiskers (errorbar). Defaults to half the width of the half-boxplot.
+#' @export
+
 GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
   default_aes = aes(weight = 1, colour = "grey20", fill = "white", size = 0.5,
                     alpha = NA, shape = 19, linetype = "solid"),
