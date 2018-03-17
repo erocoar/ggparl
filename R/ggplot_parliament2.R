@@ -14,6 +14,7 @@
 #' @param rad_outer Limiting outer radius of the diagram. Defaults to 3
 #' @param arc_n Number of points used to draw arc polygons for each party Defaults to 360
 #' @param sep Total spacing between parties as a proportion of pi. Defaults to 0.05
+#' @importFrom ggplot2 coord_fixed theme_void guides geom_polygon geom_text
 #' @export
 #' 
 #' @examples

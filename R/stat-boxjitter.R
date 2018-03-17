@@ -1,4 +1,5 @@
-StatBoxJitter <- ggproto("StatBoxJitter", ggplot2:::Stat,
+#' @importFrom ggplot2 ggproto Stat StatBoxplot
+StatBoxJitter <- ggproto("StatBoxJitter", Stat,
    required_aes = c("x", "y"),
    non_missing_aes = "weight",
    

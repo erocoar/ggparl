@@ -14,6 +14,8 @@
 #' @param rad_inner Limiting inner radius of the diagram. Defaults to 1.5
 #' @param rad_outer Limiting outer radius of the diagram. Defaults to 3
 #' @param circle_n Number of points used to draw circle polygons for each member. Defaults to 360
+#' 
+#' @importFrom ggplot2 coord_fixed theme_void guides geom_polygon geom_text
 #' @export
 #' 
 #' @examples 

@@ -1,6 +1,7 @@
 #' @rdname ggparl-extensions
 #' @format NULL
 #' @usage NULL
+#' @importFrom ggplot2 ggproto GeomBoxplot
 #' @export
 GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
   default_aes = aes(weight = 1, colour = "grey20", fill = "white", size = 0.5,
@@ -137,7 +138,7 @@ GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
 #' A hybrid boxplot. H
 
 #' Half boxplot, half scatterplot with jitter.
-
+#' @importFrom ggplot2 layer
 #' @inheritParams ggplot2::geom_boxplot
 #' @param jitter.colour,jitter.color,jitter.fill,jitter.shape,jitter.size,jitter.stroke,jitter.alpha
 #'   Default aesthetics for jitter, set to `NULL` to inherit from the aesthetics used for the box.
