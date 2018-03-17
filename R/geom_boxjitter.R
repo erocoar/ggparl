@@ -1,7 +1,8 @@
 #' @rdname ggparl-extensions
 #' @format NULL
 #' @usage NULL
-#' @importFrom ggplot2 ggproto GeomBoxplot aes
+#' @importFrom ggplot2 ggproto GeomBoxplot aes ggname
+#' @importFrom grid grobTree
 #' @export
 GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
   default_aes = aes(weight = 1, colour = "grey20", fill = "white", size = 0.5,
@@ -124,7 +125,7 @@ GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
       outliers_grob <- NULL
     }
     
-    ggplot2:::ggname("geom_boxjitter", grobTree(
+    ggname("geom_boxjitter", grobTree(
       outliers_grob,
       error_grob,
       GeomPoint$draw_panel(jitt, panel_params, coord),
