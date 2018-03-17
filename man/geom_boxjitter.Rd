@@ -89,7 +89,7 @@ aesthetics used for the box.
 In the unlikely event you specify both US and UK spellings of colour, the
 US spelling will take precedence.}
 
-\item{jitter.colour, jitter.color, jitter.fill, jitter.size, jitter.stroke, jitter.alpha}{Default aesthetics for jitter, set to `NULL` to inherit from the aesthetics used for the box.}
+\item{jitter.colour, jitter.color, jitter.fill, jitter.shape, jitter.size, jitter.stroke, jitter.alpha}{Default aesthetics for jitter, set to `NULL` to inherit from the aesthetics used for the box.}
 
 \item{jitter.width}{Width passed to `position_jitter`. Defaults to half the width of the boxplot.}
 
