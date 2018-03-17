@@ -91,11 +91,11 @@ US spelling will take precedence.}
 
 \item{jitter.colour, jitter.color, jitter.fill, jitter.shape, jitter.size, jitter.stroke, jitter.alpha}{Default aesthetics for jitter, set to `NULL` to inherit from the aesthetics used for the box.}
 
-\item{jitter.width}{Width passed to `position_jitter`. Defaults to half the width of the boxplot.}
+\item{jitter.width}{Width passed to position_jitter. Defaults to half the width of the boxplot.}
 
-\item{jitter.height}{Height passed to `position_jitter`. Defaults to 40% of the resolution.}
+\item{jitter.height}{Height passed to position_jitter. Defaults to 40% of the resolution.}
 
-\item{jitter.seed}{Seed passed to `position_jitter` for reproducible jittering.}
+\item{jitter.seed}{Seed passed to position_jitter for reproducible jittering.}
 
 \item{notch}{if \code{FALSE} (default) make a standard box plot. If
 \code{TRUE}, make a notched box plot. Notches are used to compare groups;
