@@ -191,5 +191,3 @@ geom_boxjitter <- function(mapping = NULL, data = NULL,
     )
   )
 }
-
-ggplot(test, aes(x = fac, y = y)) + geom_boxjitter(errorbar.draw = TRUE)

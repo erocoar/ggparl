@@ -16,3 +16,6 @@ Suggests: knitr,
 Collate: 
     'ggplot_parliament.R'
     'ggplot_parliament2.R'
+	'geom_boxjitter.R'
+	'stat-boxjitter.R'
+	'utilities.R'
