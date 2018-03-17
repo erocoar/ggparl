@@ -151,7 +151,7 @@ GeomBoxJitter <- ggproto("GeomBoxJitter", GeomBoxplot,
 #' 
 #' @export
 geom_boxjitter <- function(mapping = NULL, data = NULL,
-                           stat = "BoxJitter", position = "dodge2",
+                           stat = "BoxJitter", position = "dodge",
                            ...,
                            outlier.colour = NULL,
                            outlier.color = NULL,
