@@ -3,6 +3,7 @@
 
 ### Note
 Development of this package is continued as [ggpol](https://github.com/erocoar/ggpol). 
+
 https://github.com/erocoar/ggpol
 
 ### About
